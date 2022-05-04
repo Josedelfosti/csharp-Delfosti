@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Izipaygateway</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="@ViewData["url"]static/js/krypton-client/V4.0/stable/kr-payment-form.min.js"
+            kr-public-key="@ViewData["js_token"]" kr-post-url-success="/Gateway/respuesta/">
+    </script>
+    <link rel="stylesheet"
+          href="@ViewData["url"]static/js/krypton-client/V4.0/ext/classic-reset.css">
+    <script src="@ViewData["url"]static/js/krypton-client/V4.0/ext/classic.js">
+    </script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body class="body">
+    @RenderBody()
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

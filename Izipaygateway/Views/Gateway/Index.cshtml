@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    GatewayModel gm = new GatewayModel();
+    ViewData["url"] = gm.URL_BASE;
+    ViewData["js_token"] = gm.KEY_JS;
+}
+<div class="form-izi">
+    <img src="~/img/izipay3.png" class="logo-png" alt="">
+    <div id="valdas" class="kr-embedded" kr-form-token="@ViewBag.FORMTOKEN">
+        <div class="kr-pan"></div>
+        <div class="kr-expiry"></div>
+        <div class="kr-security-code"></div>
+        <!-- payment form submit button -->
+        <button class="kr-payment-button"></button>
+        <!-- error zone -->
+        <div class="kr-form-error"></div>
+    </div>
+</div>
+<script>
+        var cont = 0;
+        KR.onError( function(event) {
+            var code = event.errorCode;
+            console.log(code);
+            console.error(cont);
+            if(code != null){
+                cont = cont + 1;
+            }
+
+            if(cont>1){
+                console.log("se cancelo");
+                document.getElementById("valdas").style.display = "none";
+            }
+        });
+        KR.onSubmit( function(event) {
+            console.log(event.hashAlgorithm.toString());
+            console.log(event.rawClientAnswer);
+            console.log(event.hashKey.toString());
+            console.log(event.hash.toString());
+            $.ajax({
+                url: '/Gateway/validador/',
+                data : {
+                    kr_hash_algorithm : event.hashAlgorithm.toString(),
+                    kr_answer : event.rawClientAnswer,
+                    kr_hash_key : event.hashKey.toString(),
+                    kr_hash : event.hash.toString()
+                },
+                type : 'POST',
+                dataType : 'json',
+                success : function(json) {
+                    if (json == 'true')
+                    {
+                        Swal.fire(
+                        'Resultado',
+                        'Autorizacion Exitosa!',
+                        'success'
+                        )
+                    }
+                },
+                error : function(xhr, status) {
+                    console.log(xhr);
+                    console.log(json.parse(xhr));
+                    console.log(xhr + ' ' + status);
+                    alert('Disculpe, existió un problema');
+                }
+            });
+        return false;
+        });
+</script>
